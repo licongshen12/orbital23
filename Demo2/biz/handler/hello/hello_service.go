@@ -2,29 +2,7 @@
 
 package hello
 
-import (
-	"context"
-
-	hello "Demo2/biz/model/hello"
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
-)
-
-// Hello .
-// @router /hello [GET]
-func Hello(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req hello.HelloReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(hello.HelloResp)
-	resp.RespBody = "Hello, " + req.Name + req.BodyValue
-	c.JSON(consts.StatusOK, resp)
-}
+import hello "Demo2/biz/model/hello"
 
 // HelloMethod .
 // @router /hello [GET]
@@ -38,7 +16,7 @@ func HelloMethod(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(hello.HelloResp)
-
+	resp.RespBody = "Hello, " + req.Name
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -54,6 +32,6 @@ func OtherMethod(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(hello.OtherResp)
-
+	resp.Resp = "Other Method" + req.Other
 	c.JSON(consts.StatusOK, resp)
 }

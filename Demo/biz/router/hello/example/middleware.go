@@ -15,3 +15,18 @@ func _helloMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _hellomethodMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _newmethodMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _othermethodMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
