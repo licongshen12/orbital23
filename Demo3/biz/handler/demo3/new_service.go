@@ -10,22 +10,41 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 	"github.com/cloudwego/kitex/pkg/generic"
-    "github.com/cloudwego/kitex/server/genericserver"
+    "github.com/cloudwego/kitex/client/genericclient"
 )
+
+const path = "/Documents/Github/Solanahackathon/orbital23/Demo3"
 
 // NewMethod .
 // @router /new [GET]
 func NewMethod(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req demo3.ApiReq
+	var req demo3.OtherReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-	
 
-	resp := new(demo3.ApiResp)
-
+	// Parse IDL with Local Files
+	// YOUR_IDL_PATH thrift file path, eg:./idl/example.thrift
+	p, err := generic.NewThriftFileProvider(path)
+	if err != nil {
+		panic(err)
+	}
+	g, err := generic.JSONThriftGeneric(p)
+	if err != nil {
+		panic(err)
+	}
+	cli, err := genericclient.NewClient("demo3", g)
+	if err != nil {
+		panic(err)
+	}
+	// 'ExampleMethod' method name must be passed as param
+	resp, err := cli.GenericCall(ctx, "ExampleMethod", "{\"Msg\": \"hello\"}")
+	// resp is a JSON string
+	if err != nil {
+		panic(err)
+	}
 	c.JSON(consts.StatusOK, resp)
 }
