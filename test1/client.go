@@ -4,7 +4,7 @@ package main
 import (
 	"context"
 	"fmt"
-	arithmetic "path/to/generated/arithmetic"
+	arithmetic "github.com/licongshen12/orbital23/tree/main/test1/gen-go/arithmetic"
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
