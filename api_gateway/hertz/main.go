@@ -5,16 +5,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+
 	//"github.com/cloudwego/hertz/pkg/common/errors"
+	"net/http"
+
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/genericclient"
 	"github.com/cloudwego/kitex/pkg/generic"
-	"net/http"
 )
 
 func makeThriftCall(IDLPath string, response []byte, requestURL string, ctx context.Context) (interface{}, error) {
@@ -52,11 +55,11 @@ func makeThriftCall(IDLPath string, response []byte, requestURL string, ctx cont
 
 	resp, err := cli.GenericCall(ctx, "hello", customReq)
 
-	fmt.Println("gen call success")
+	fmt.Println("generic call successful")
 	fmt.Println(resp)
 
 	if err != nil {
-		fmt.Println("error makign gen call")
+		fmt.Println("error making generic call")
 		return 0, err
 	}
 
