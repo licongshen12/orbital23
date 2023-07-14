@@ -1,38 +1,45 @@
-// server.go
 package main
 
 import (
 	"context"
 	"fmt"
-	arithmetic "github.com/licongshen12/orbital23/tree/main/test1/gen-go/arithmetic"
+
 	"github.com/apache/thrift/lib/go/thrift"
+	Arithmetic "github.com/licongshen12/orbital23/gen-go/arithmetic" // Replace with your actual module path
 )
 
-type arithmeticHandler struct{}
+// Make sure the struct implements the Arithmetic interface
+type ArithmeticHandler struct{}
 
-func (p *arithmeticHandler) Add(ctx context.Context, num1 int32, num2 int32) (int32, error) {
+func NewArithmeticHandler() *ArithmeticHandler {
+	return &ArithmeticHandler{}
+}
+
+func (*ArithmeticHandler) Add(ctx context.Context, num1 int32, num2 int32) (int32, error) {
+	// Implement the Add operation here
 	return num1 + num2, nil
 }
 
-func RunServer() {
-	transport, err := thrift.NewTServerSocket(":9090")
+func main() {
+	handler := NewArithmeticHandler()
+	processor := tutorial.NewArithmeticProcessor(handler)
+
+	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
+	transportFactory := thrift.NewTTransportFactory()
+
+	address := "localhost:9090"
+	transport, err := thrift.NewTServerSocket(address)
+
 	if err != nil {
-		fmt.Println("Error!", err)
+		fmt.Println("Error creating Thrift server socket:", err)
 		return
 	}
 
-	handler := &arithmeticHandler{}
-	processor := arithmetic.NewArithmeticProcessor(handler)
-
-	transportFactory := thrift.NewTTransportFactory()
-	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
-
 	server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)
 
-	fmt.Println("Starting the simple server... on ", ":9090")
-	server.Serve()
+	fmt.Println("Starting the simple server... on ", address)
+	if err := server.Serve(); err != nil {
+		fmt.Println("Error starting Thrift server:", err)
+	}
 }
 
-func main() {
-	RunServer()
-}

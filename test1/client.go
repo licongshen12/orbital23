@@ -1,14 +1,33 @@
-// client.go
 package main
 
 import (
 	"context"
 	"fmt"
-	arithmetic "github.com/licongshen12/orbital23/tree/main/test1/gen-go/arithmetic"
+
 	"github.com/apache/thrift/lib/go/thrift"
+	Arithmetic "github.com/licongshen12/orbital23/gen-go/arithmetic" // Replace with your actual module path
 )
 
-func RunClient() {
+func handleClient(client *Arithmetic.ArithmeticClient) (err error) {
+	ctx := context.Background()
+
+	res, err := client.Add(ctx, 10, 20)
+	if err != nil {
+		fmt.Println("Error calling Add:", err)
+		return err
+	}
+
+	fmt.Println("Result:", res)
+	return nil
+}
+
+func main() {
+	var protocolFactory thrift.TProtocolFactory
+	var transportFactory thrift.TTransportFactory
+
+	protocolFactory = thrift.NewTBinaryProtocolFactoryDefault()
+	transportFactory = thrift.NewTTransportFactory()
+
 	transport, err := thrift.NewTSocket("localhost:9090")
 	if err != nil {
 		fmt.Println("Error opening socket:", err)
@@ -16,30 +35,23 @@ func RunClient() {
 	}
 	defer transport.Close()
 
-	transportFactory := thrift.NewTTransportFactory()
 	transport, err = transportFactory.GetTransport(transport)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error getting Transport:", err)
 		return
 	}
+
 	if err := transport.Open(); err != nil {
-		fmt.Println(err)
+		fmt.Println("Error opening transport:", err)
 		return
 	}
 
-	protocolFactory := thrift.NewTBinaryProtocolFactoryDefault()
+	iprot := protocolFactory.GetProtocol(transport)
+	oprot := protocolFactory.GetProtocol(transport)
 
-	client := arithmetic.NewArithmeticClientFactory(transport, protocolFactory)
+	client := Arithmetic.NewArithmeticClient(thrift.NewTStandardClient(iprot, oprot))
 
-	sum, err := client.Add(context.Background(), 10, 20)
-	if err != nil {
-		fmt.Println("Error calling Add:", err)
-		return
+	if err := handleClient(client); err != nil {
+		fmt.Println("Error handling client:", err)
 	}
-
-	fmt.Println("Sum:", sum)
-}
-
-func main() {
-	RunClient()
 }

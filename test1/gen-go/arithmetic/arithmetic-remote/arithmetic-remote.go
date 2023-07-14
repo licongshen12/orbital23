@@ -23,6 +23,7 @@ func Usage() {
   flag.PrintDefaults()
   fmt.Fprintln(os.Stderr, "\nFunctions:")
   fmt.Fprintln(os.Stderr, "  i32 add(i32 a, i32 b)")
+  fmt.Fprintln(os.Stderr, "  i32 multiply(i32 a, i32 b)")
   fmt.Fprintln(os.Stderr)
   os.Exit(0)
 }
@@ -150,21 +151,43 @@ func main() {
       fmt.Fprintln(os.Stderr, "Add requires 2 args")
       flag.Usage()
     }
-    tmp0, err7 := (strconv.Atoi(flag.Arg(1)))
-    if err7 != nil {
+    tmp0, err12 := (strconv.Atoi(flag.Arg(1)))
+    if err12 != nil {
       Usage()
       return
     }
     argvalue0 := int32(tmp0)
     value0 := argvalue0
-    tmp1, err8 := (strconv.Atoi(flag.Arg(2)))
-    if err8 != nil {
+    tmp1, err13 := (strconv.Atoi(flag.Arg(2)))
+    if err13 != nil {
       Usage()
       return
     }
     argvalue1 := int32(tmp1)
     value1 := argvalue1
     fmt.Print(client.Add(context.Background(), value0, value1))
+    fmt.Print("\n")
+    break
+  case "multiply":
+    if flag.NArg() - 1 != 2 {
+      fmt.Fprintln(os.Stderr, "Multiply requires 2 args")
+      flag.Usage()
+    }
+    tmp0, err14 := (strconv.Atoi(flag.Arg(1)))
+    if err14 != nil {
+      Usage()
+      return
+    }
+    argvalue0 := int32(tmp0)
+    value0 := argvalue0
+    tmp1, err15 := (strconv.Atoi(flag.Arg(2)))
+    if err15 != nil {
+      Usage()
+      return
+    }
+    argvalue1 := int32(tmp1)
+    value1 := argvalue1
+    fmt.Print(client.Multiply(context.Background(), value0, value1))
     fmt.Print("\n")
     break
   case "":
