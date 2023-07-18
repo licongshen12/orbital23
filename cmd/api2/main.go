@@ -52,6 +52,8 @@ func main() {
 			return
 		}
 
+		//working until here
+
 		responseFromRPC, err := makeThriftCall(IDLPATH, response, requestURL, ctx)
 
 		if err != nil {
