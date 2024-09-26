@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// Create a load balancer with the random load balancing strategy
-	loadBalancer := random.NewRandomLB()
+	loadBalancer := random.WeightedRoundRobinLB()
 
 	// Create the RPC client with load balancing enabled
 	cli, err := genericclient.NewClient("service-name",
